@@ -63,9 +63,9 @@ function Meterpointer(geckometerObj) {
      this.options = this.mp.options;
      this.context = this.mp.context;
      this.canvas = this.mp.canvas;
-     // this.value = this.options.value || 0;
-     // this.min = this.options.min || 0;
-     // this.max = this.options.max || 200;
+     this.value = this.options.value || 0;
+     this.min = this.options.min || 0;
+     this.max = this.options.max || 200;
      this.length = 0.4;
      this.strokeWidth = 4;
      this.fillColor = 'grey';
@@ -75,15 +75,24 @@ function Meterpointer(geckometerObj) {
 
 Meterpointer.prototype = {
     setOptions: function(){
-
+      if(this.value > this.max){
+        this.value = this.max;
+      }
+      if(this.value < this.min){
+        this.value = this.min;
+      }
+    },
+    getAngle : function() {
+      return (1 - this.value) * Math.PI + ((this.value - this.min) / (this.max - this.min)) * ((2 + this.value) - (1 - this.value)) * Math.PI;
     },
     render: function(){
       var angle, centerX, centerY, endX, endY, startX, startY, x, y;
-      angle = 34;
+      angle = this.getAngle();
+      var radius = 75;
       centerX = this.canvas.width / 2;
-      centerY = this.canvas.height * 0.9;
-      x = Math.round(centerX + this.length * Math.cos(angle));
-      y = Math.round(centerY + this.length * Math.sin(angle));
+      centerY = this.canvas.height * 0.81;
+      x = Math.round(centerX + radius * Math.cos(angle));
+      y = Math.round(centerY + radius * Math.sin(angle));
       startX = Math.round(centerX + this.strokeWidth * Math.cos(angle - Math.PI / 2));
       startY = Math.round(centerY + this.strokeWidth * Math.sin(angle - Math.PI / 2));
       endX = Math.round(centerX + this.strokeWidth * Math.cos(angle + Math.PI / 2));
@@ -92,9 +101,10 @@ Meterpointer.prototype = {
       this.context.beginPath();
       this.context.moveTo(startX, startY);
       this.context.lineTo(x, y);
+      //this.context.lineTo(200, 100);
       this.context.strokeStyle = 'grey';
       this.context.lineWidth = 4;
-      this.context.lineTo(endX, endY);
+      // this.context.lineTo(endX, endY);
       this.context.stroke();
     }
 }
@@ -104,7 +114,7 @@ Meterpointer.prototype = {
 var ele = document.getElementById('geckometer');
 var options = {
     targetElement: ele,
-    "value": 34,
+    "value": 200,
     "min": 0,
     "max": 180,
     "format": "currency",
