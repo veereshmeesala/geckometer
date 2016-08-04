@@ -29,9 +29,10 @@ Geckometer.prototype = {
 
       // showing the min value and max value text on the component
       this.context.font = '50px Verdana';
-      this.context.fillStyle = 'grey';
+      this.context.fillStyle = 'white';
       this.context.fillText(this.displayValue, 210, 80);
       this.context.font = '14px Verdana';
+       this.context.fillStyle = 'grey';
       this.context.fillText(this.displayMin, 160, 220);
       this.context.fillText(this.displayMax, 305, 220);
       
