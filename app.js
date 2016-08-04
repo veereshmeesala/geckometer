@@ -3,6 +3,9 @@ function Geckometer(opt) { // function Gauge
       this.canvas = opt.targetElement;      
       this.context = this.canvas.getContext('2d');
       this.mp = new Meterpointer(this);
+      this.displayMin = this.getFormat() + this.options.min;
+      this.displayMax = this.getFormat() + this.options.max;
+      this.displayValue = this.getFormat() + this.options.value;
       this.setOptions();
       this.render();
 }
@@ -27,15 +30,29 @@ Geckometer.prototype = {
       // showing the min value and max value text on the component
       this.context.font = '30px Verdana';
       this.context.fillStyle = 'grey';
-      this.context.fillText(this.options.min, 170, 220);
-      this.context.fillText(this.options.max, 320, 220);
-      this.context.fillText(this.options.value, 250, 50);
+      this.context.fillText(this.displayValue, 230, 50);
+      this.context.font = '14px Verdana';
+      this.context.fillText(this.displayMin, 160, 220);
+      this.context.fillText(this.displayMax, 305, 220);
+      
     },
     setOptions: function(){
 
+      
+    },
+    getFormat: function(){
+      switch (this.options.unit) {
+          case "GBP":
+            return '£';
+            break;
+          case "USD":
+           return '$';
+            break;
+          default:
+            return '£';
+        }
     },
     render: function () {
-        console.log('Set meter started');
         this.drawMeter();
     }
 };
@@ -46,13 +63,13 @@ function Meterpointer(geckometerObj) {
      this.options = this.mp.options;
      this.context = this.mp.context;
      this.canvas = this.mp.canvas;
-     this.value = this.options.value || 0;
-     this.min = this.options.min || 0;
-     this.max = this.options.max || 200;
+     // this.value = this.options.value || 0;
+     // this.min = this.options.min || 0;
+     // this.max = this.options.max || 200;
      this.length = 0.4;
      this.strokeWidth = 4;
      this.fillColor = 'grey';
-     // this.setOptions();
+     this.setOptions();
      this.render();
 }
 
