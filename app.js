@@ -23,6 +23,13 @@ Geckometer.prototype = {
       // line color
       this.context.strokeStyle = 'grey';
       this.context.stroke();
+
+      // showing the min value and max value text on the component
+      this.context.font = '30px Verdana';
+      this.context.fillStyle = 'grey';
+      this.context.fillText(this.options.min, 170, 220);
+      this.context.fillText(this.options.max, 320, 220);
+      this.context.fillText(this.options.value, 250, 50);
     },
     setOptions: function(){
 
@@ -72,14 +79,6 @@ Meterpointer.prototype = {
       this.context.lineWidth = 4;
       this.context.lineTo(endX, endY);
       this.context.stroke();
-
-      // showing the min value and max value text on the component
-      var minTextPosX = this.canvas.width/2;
-      var minTextPosY = this.canvas.height - 50;
-      this.context.font = '80 Verdana';
-      this.context.fillStyle = 'grey';
-      this.context.fillText(this.min, minTextPosX, minTextPosY);
-      this.context.fillText(this.max, 100, 100);
     }
 }
 
@@ -89,7 +88,7 @@ var ele = document.getElementById('geckometer');
 var options = {
     targetElement: ele,
     "value": 34,
-    "min": 34,
+    "min": 0,
     "max": 180,
     "format": "currency",
     "unit": "GBP"
