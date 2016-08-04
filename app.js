@@ -1,14 +1,16 @@
 function Geckometer(opt) { // function Gauge
+      this.options = opt;
       this.canvas = opt.targetElement;      
       this.context = this.canvas.getContext('2d');
+      this.mp = new Meterpointer(this);
       this.setOptions();
       this.render();
 }
 Geckometer.prototype = {
-    constructor: Geckometer,
+    // constructor: Geckometer,
     drawMeter: function(){
-      var x = this.canvas.width / 2;
-      var y = this.canvas.height / 2;
+      var x = this.canvas.width/2;
+      var y = this.canvas.height - 50;
       var radius = 75;
       var startAngle = 0;
       var endAngle = Math.PI;
@@ -19,62 +21,8 @@ Geckometer.prototype = {
       this.context.lineWidth = 15;
 
       // line color
-      this.context.strokeStyle = 'black';
+      this.context.strokeStyle = 'grey';
       this.context.stroke();
-    },
-    drawPointer: function(){
-      var angle, centerX, centerY, endX, endY, startX, startY, x, y;
-      var pointerLength = 0.8;
-      var  pointerStrokeWidth = 0.035;
-      angle = 34;
-      centerX = this.canvas.width / 2;
-      centerY = this.canvas.height * 0.9;
-      x = Math.round(centerX + pointerLength * Math.cos(angle));
-      y = Math.round(centerY + pointerLength * Math.sin(angle));
-      startX = Math.round(centerX + pointerStrokeWidth * Math.cos(angle - Math.PI / 2));
-      startY = Math.round(centerY + pointerStrokeWidth * Math.sin(angle - Math.PI / 2));
-      endX = Math.round(centerX + pointerStrokeWidth * Math.cos(angle + Math.PI / 2));
-      endY = Math.round(centerY + pointerStrokeWidth * Math.sin(angle + Math.PI / 2));
-      this.context.fillStyle = 'black';
-      this.context.beginPath();
-      this.context.arc(centerX, centerY, pointerStrokeWidth , 0, Math.PI * 2, true);
-      // this.context.fill();
-      this.context.stroke();
-      this.context.beginPath();
-      this.context.moveTo(startX, startY);
-      this.context.lineTo(x, y);
-      this.context.lineTo(endX, endY);
-      this.context.strokeStyle = 'black';
-      this.context.stroke();
-
-      return this;
-      // this.context.fill();
-
-    //   var width = this.radius * 0.07,
-    //     len = this.radius * 0.8,
-    //     pos = 34;
-    //    this.context.beginPath();
-    // this.context.lineWidth = width;
-    // this.context.lineCap = "round";
-    // this.context.moveTo(0,0);
-    // this.context.rotate(pos);
-    // this.context.lineTo(0, -len);
-    // this.context.stroke();
-    // this.context.rotate(-pos);
-
-
-            // var angle, centerX, centerY;
-            // centerX = this.canvas.width / 2;
-            // centerY = this.canvas.height * 0.9;
-            // this.context.beginPath();
-            // this.context.translate(centerX, centerY);
-            // this.context.rotate(-180 * Math.PI/180); // Correct for top left origin
-            // this.context.rotate(angle * Math.PI/180);
-            // this.context.moveTo(0, 0);
-            // this.context.lineTo(0, length);
-            // this.context.strokeStyle = 'black';
-            // this.context.stroke();
-
     },
     setOptions: function(){
 
@@ -82,26 +30,58 @@ Geckometer.prototype = {
     render: function () {
         console.log('Set meter started');
         this.drawMeter();
-        this.drawPointer();
     }
 };
 
 
-// function Meterpointer() {
+function Meterpointer(geckometerObj) {
+     this.mp = geckometerObj;
+     this.options = this.mp.options;
+     this.context = this.mp.context;
+     this.canvas = this.mp.canvas;
+     this.value = this.options.value || 0;
+     this.min = this.options.min || 0;
+     this.max = this.options.max || 200;
+     this.length = 0.4;
+     this.strokeWidth = 4;
+     this.fillColor = 'grey';
+     // this.setOptions();
+     this.render();
+}
+
+Meterpointer.prototype = {
+    setOptions: function(){
+
+    },
+    render: function(){
+      var angle, centerX, centerY, endX, endY, startX, startY, x, y;
+      angle = 34;
+      centerX = this.canvas.width / 2;
+      centerY = this.canvas.height * 0.9;
+      x = Math.round(centerX + this.length * Math.cos(angle));
+      y = Math.round(centerY + this.length * Math.sin(angle));
+      startX = Math.round(centerX + this.strokeWidth * Math.cos(angle - Math.PI / 2));
+      startY = Math.round(centerY + this.strokeWidth * Math.sin(angle - Math.PI / 2));
+      endX = Math.round(centerX + this.strokeWidth * Math.cos(angle + Math.PI / 2));
+      endY = Math.round(centerY + this.strokeWidth * Math.sin(angle + Math.PI / 2));
      
-//       this.setOptions();
-//       this.render();
-// }
+      this.context.beginPath();
+      this.context.moveTo(startX, startY);
+      this.context.lineTo(x, y);
+      this.context.strokeStyle = 'grey';
+      this.context.lineWidth = 4;
+      this.context.lineTo(endX, endY);
+      this.context.stroke();
 
-// Meterpointer.prototype = {
-//     constructor: Meterpointer,
-//     setOptions: function(){
-
-//     },
-//     render: function(){
-
-//     }
-// }
+      // showing the min value and max value text on the component
+      var minTextPosX = this.canvas.width/2;
+      var minTextPosY = this.canvas.height - 50;
+      this.context.font = '80 Verdana';
+      this.context.fillStyle = 'grey';
+      this.context.fillText(this.min, minTextPosX, minTextPosY);
+      this.context.fillText(this.max, 100, 100);
+    }
+}
 
 
 
@@ -109,8 +89,8 @@ var ele = document.getElementById('geckometer');
 var options = {
     targetElement: ele,
     "value": 34,
-    "min": 0,
-    "max": 200,
+    "min": 34,
+    "max": 180,
     "format": "currency",
     "unit": "GBP"
 }
