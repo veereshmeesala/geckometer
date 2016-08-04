@@ -6,7 +6,7 @@ function Geckometer(opt) { // function Gauge
       this.displayMin = this.getFormat() + this.options.min;
       this.displayMax = this.getFormat() + this.options.max;
       this.displayValue = this.getFormat() + this.options.value;
-      this.setOptions();
+      // this.setOptions();
       this.render();
 }
 Geckometer.prototype = {
@@ -28,18 +28,18 @@ Geckometer.prototype = {
       this.context.stroke();
 
       // showing the min value and max value text on the component
-      this.context.font = '30px Verdana';
+      this.context.font = '50px Verdana';
       this.context.fillStyle = 'grey';
-      this.context.fillText(this.displayValue, 230, 50);
+      this.context.fillText(this.displayValue, 210, 80);
       this.context.font = '14px Verdana';
       this.context.fillText(this.displayMin, 160, 220);
       this.context.fillText(this.displayMax, 305, 220);
       
     },
-    setOptions: function(){
+    // setOptions: function(){
 
       
-    },
+    // },
     getFormat: function(){
       switch (this.options.unit) {
           case "GBP":
@@ -90,7 +90,7 @@ Meterpointer.prototype = {
       angle = this.getAngle();
       var radius = 75;
       centerX = this.canvas.width / 2;
-      centerY = this.canvas.height * 0.81;
+      centerY = this.canvas.height * 0.8;
       x = Math.round(centerX + radius * Math.cos(angle));
       y = Math.round(centerY + radius * Math.sin(angle));
       startX = Math.round(centerX + this.strokeWidth * Math.cos(angle - Math.PI / 2));
@@ -101,8 +101,7 @@ Meterpointer.prototype = {
       this.context.beginPath();
       this.context.moveTo(startX, startY);
       this.context.lineTo(x, y);
-      //this.context.lineTo(200, 100);
-      this.context.strokeStyle = 'grey';
+      this.context.strokeStyle = 'white';
       this.context.lineWidth = 4;
       // this.context.lineTo(endX, endY);
       this.context.stroke();
@@ -114,7 +113,7 @@ Meterpointer.prototype = {
 var ele = document.getElementById('geckometer');
 var options = {
     targetElement: ele,
-    "value": 200,
+    "value": 30,
     "min": 0,
     "max": 180,
     "format": "currency",
